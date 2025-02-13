@@ -8,7 +8,7 @@ import com.Techforge.SheildSpring.DTO.HttpMethod;
 
 public class CorsConfigurer {
 	
-	private List<String> AllowedOrigins;
+	private String AllowedOrigin;
 	
 	private List<HttpMethod> AllowedMethods;
 	
@@ -16,12 +16,12 @@ public class CorsConfigurer {
 	
 	private String RequiredHeader;
 
-	public List<String> getAllowedOrigins() {
-		return AllowedOrigins;
+	public String getAllowedOrigin() {
+		return AllowedOrigin;
 	}
 
-	public void setAllowedOrigins(List<String> allowedOrigins) {
-		AllowedOrigins = allowedOrigins;
+	public void setAllowedOrigin(String allowedOrigin) {
+		AllowedOrigin = allowedOrigin;
 	}
 
 	public List<HttpMethod> getAllowedMethods() {

@@ -1,5 +1,7 @@
 package com.Techforge.SheildSpring.Core.Configuration;
 
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 
 import com.Techforge.SheildSpring.Components.CorsConfigurer;
@@ -8,16 +10,14 @@ import com.Techforge.SheildSpring.Components.CorsConfigurer;
 @Component
 public class SecurityBuilder {
 	
-	private CorsConfigurer corsConfigurer;
+	private List<CorsConfigurer> corsConfigurer;
 
-	public CorsConfigurer getCorsConfigurer() {
+	public List<CorsConfigurer> getCorsConfigurer() {
 		return corsConfigurer;
 	}
 
-	public void setCorsConfigurer(CorsConfigurer corsConfigurer) {
+	public void setCorsConfigurer(List<CorsConfigurer> corsConfigurer) {
 		this.corsConfigurer = corsConfigurer;
 	}
-	
-	
 
 }

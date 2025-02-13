@@ -21,6 +21,8 @@ public class SecureFilter extends OncePerRequestFilter{
 	
 	private final String ORIGIN_MESSAGE = "This origin is not allowed to access the api";
 	
+	private final String METHOD_MESSAGE = "This origin is not allowed to the requested method";
+	
 	@Autowired
 	private SecurityBuilder securityBuilder;
 	
@@ -31,10 +33,18 @@ public class SecureFilter extends OncePerRequestFilter{
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 		
+		tools.init(securityBuilder);
+		
 		response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
-		if(tools.verifyOrigin(securityBuilder, request)) {
-			filterChain.doFilter(request, response);
-		}else {
+		if(tools.verifyOrigin(request)) {//1 context initializer
+			if(tools.verifyMethod(request)) {//2 method verifier
+				filterChain.doFilter(request, response);
+			}else {//2
+				response.setStatus(403);
+				ErrorResponse errresponse = new ErrorResponse(METHOD_MESSAGE, 403);
+				response.getWriter().write("<h1>"+errresponse.toString()+"</h1>");
+			}
+		}else {//1
 			response.setStatus(403);
 			ErrorResponse errresponse = new ErrorResponse(ORIGIN_MESSAGE, 403);
 			response.getWriter().write("<h1>"+errresponse.toString()+"</h1>");
