@@ -24,20 +24,24 @@ public class SecureFilter extends OncePerRequestFilter{
 	
 	private final String METHOD_MESSAGE = "This origin is not allowed to the requested method";
 	
+	private final String HEADER_MESSAGE = "Required header is not availbale in your request";
+	
 	
 	private final SecurityBuilder securityBuilder;
 	
 	private final ApiTools tools;
+	
+	public SecureFilter(SecurityBuilder builder) {
+		this.securityBuilder=builder;
+		this.tools = new ApiTools();
+	}
 	
 	public SecureFilter(ApiTools tools) {
 		this.securityBuilder = new SecurityBuilder();
 		this.tools = tools;
 	}
 
-	public SecureFilter(SecurityBuilder builder) {
-		this.securityBuilder=builder;
-		this.tools = new ApiTools();
-	}
+	
 	
 	public SecureFilter() {
 		this.securityBuilder = new SecurityBuilder();
@@ -51,12 +55,23 @@ public class SecureFilter extends OncePerRequestFilter{
 			throws ServletException, IOException {
 		
 		tools.init(securityBuilder);
-		System.out.println("filter working");
 		
 		response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
+		response.setHeader("Access-Control-Allow-Headers", "*");
+		response.setHeader("Access-Control-Allow-Credentials", "true");
+		if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            response.setStatus(HttpServletResponse.SC_OK);
+            return;
+        }
 		if(tools.verifyOrigin(request)) {//1 context initializer
 			if(tools.verifyMethod(request)) {//2 method verifier
-				filterChain.doFilter(request, response);
+				if(tools.verifyRequiredheaders(request)) {//3 required header
+					filterChain.doFilter(request, response);
+				}else {
+					response.setStatus(403);
+					ErrorResponse errorsponse = new ErrorResponse(HEADER_MESSAGE, 403);
+					response.getWriter().write("<h1>"+errorsponse.toString()+"</h1>");
+				}
 			}else {//2
 				response.setStatus(403);
 				ErrorResponse errresponse = new ErrorResponse(METHOD_MESSAGE, 403);

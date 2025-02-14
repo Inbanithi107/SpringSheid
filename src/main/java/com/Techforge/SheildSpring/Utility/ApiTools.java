@@ -70,5 +70,14 @@ public class ApiTools {
 		return false;
 		
 	}
+	
+	public boolean verifyRequiredheaders(HttpServletRequest request) {
+		String required = context.getCorsconfigured().getRequiredHeader();
+		String header = request.getHeader(required);
+		if(header==null) {
+			return false;
+		}
+		return true;
+	}
 
 }
