@@ -21,8 +21,17 @@ public class ApiTools {
 	 
 	 private SecurityBuilder securityBuilder;
 	 
-	 @Autowired
-	 private SheildContext context;
+	 
+	 private final SheildContext context;
+	 
+	 public ApiTools(SheildContext context) {
+		 this.context=context;
+	 }
+	 
+	 public ApiTools() {
+		this.context = new SheildContext();
+		 
+	 }
 	 
 	 public void init(SecurityBuilder builder) {
 		 this.securityBuilder = builder;

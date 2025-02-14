@@ -20,4 +20,13 @@ public class SecurityBuilder {
 		this.corsConfigurer = corsConfigurer;
 	}
 
+	@Override
+	public String toString() {
+		return "SecurityBuilder [corsConfigurer=" + corsConfigurer + "]";
+	}
+
+	
+	
+	
+
 }
