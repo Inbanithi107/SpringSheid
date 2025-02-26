@@ -24,13 +24,15 @@ public class ApiTools {
 	 
 	 private final SheildContext context;
 	 
-	 public ApiTools(SheildContext context) {
-		 this.context=context;
-	 }
+
 	 
 	 public ApiTools() {
 		this.context = new SheildContext();
 		 
+	 }
+	 
+	 public ApiTools(SheildContext context) {
+		 this.context=context;
 	 }
 	 
 	 public void init(SecurityBuilder builder) {
@@ -43,6 +45,7 @@ public class ApiTools {
 			String path = cors.getAllowedOrigin();
 			
 			if(path.equals("*")) {
+				context.setCorsconfigured(cors);
 				return true;
 			}
 			
@@ -58,6 +61,8 @@ public class ApiTools {
 		
 		String requestMethod = request.getMethod();
 		
+		
+		
 		if(context.getCorsconfigured().getAllowedMethods()==null || context.getCorsconfigured().getAllowedMethods().equals(Arrays.asList(HttpMethod.ALL))) {
 			return true;
 		}
@@ -72,8 +77,13 @@ public class ApiTools {
 	}
 	
 	public boolean verifyRequiredheaders(HttpServletRequest request) {
+		
 		String required = context.getCorsconfigured().getRequiredHeader();
+		if(required==null) {
+			return true;
+		}
 		String header = request.getHeader(required);
+		
 		if(header==null) {
 			return false;
 		}

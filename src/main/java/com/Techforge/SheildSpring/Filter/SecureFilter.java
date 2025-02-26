@@ -66,6 +66,7 @@ public class SecureFilter extends OncePerRequestFilter{
 		if(tools.verifyOrigin(request)) {//1 context initializer
 			if(tools.verifyMethod(request)) {//2 method verifier
 				if(tools.verifyRequiredheaders(request)) {//3 required header
+					System.out.println("we are moving");
 					filterChain.doFilter(request, response);
 				}else {
 					response.setStatus(403);
